@@ -33,7 +33,7 @@ The resulting architecture will look like this:
 ### Microservice ProductService
 We start by creating the main service: Product Service.
 <p align="center">
-<img src="https://imgur.com/9zhEM3t" title="source: imgur.com" /></p>
+<img src=https://i.imgur.com/9zhEM3t.png" title="source: imgur.com" /></p>
 
 
 
