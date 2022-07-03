@@ -27,4 +27,4 @@ So we will create the following microservices:
 
 The resulting architecture will look like this:
 <p align="center">
-<img href="https://imgur.com/WXY8Pdd"></p>
+<img src="https://i.imgur.com/WXY8Pdd.png" title="source: imgur.com" /></p>
