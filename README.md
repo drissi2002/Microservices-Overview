@@ -28,3 +28,29 @@ So we will create the following microservices:
 The resulting architecture will look like this:
 <p align="center">
 <img src="https://i.imgur.com/WXY8Pdd.png" title="source: imgur.com" /></p>
+
+## Creating Microservices
+### Microservice ProductService
+We start by creating the main service: Product Service.
+<p align="center">
+<img src="https://imgur.com/9zhEM3t" title="source: imgur.com" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
