@@ -51,8 +51,8 @@ Then follow these steps to create the ProductService microservice:
 1) Open the downloaded project with IntelliJ IDEA.
 2) Under the src/main/java directory and in the tn.enicarthage.overmicro.productservice package, create the following Product class:
 
-``
-package tn.insat.tpmicro.productservice;
+```
+package tn.enicarthage.overmicro.productservice;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -83,7 +83,126 @@ public class Product implements Serializable {
         this.name = name;
     }
 }
-``
+```
+3) This class is annotated with JPA, to then store the Product objects in the H2 database thanks to Spring Data. To do this, create the ProductRepository interface in the same package:
+```
+package tn.enicarthage.overmicro.productservice;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product , Integer> {
+}
+```
+
+4) To insert the objects into the database, we will use the Stream object. For this, we will create the DummyDataCLR class:
+```
+package tn.enicarthage.overmicro.productservice;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.stream.Stream;
+
+@Component
+class DummyDataCLR implements CommandLineRunner {
+
+    @Override
+    public void run(String... strings) throws Exception {
+        Stream.of("Pencil", "Book", "Eraser").forEach(s->productRepository.save(new Product(s)));
+        productRepository.findAll().forEach(s->System.out.println(s.getName()));
+    }
+
+    @Autowired
+    private ProductRepository productRepository;
+
+}
+
+```
+*To insert the objects into the database, we will use the Stream object. For this, we will create the DummyDataCLR class:*
+
+5) Launch the main class. An H2 database will be created and the CommandLineRunner will take care of injecting the data into it.
+6) To run your application:
+Create a mvn package configuration by doing Run->Edit Configurations then creating a new Maven-like configuration with the package command as follows:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177022457-ff43cb08-bc82-4a43-bd69-cc4b43ed05dd.png)
+
+<br>
+
+A target directory will be created, containing the generated classes:<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177022489-61702b2e-09bb-4fa6-b45e-9e52db35ac86.png)
+
+<br>
+
+6) Then launch the Spring Boot *ProductServiceApplication* configuration created by default by IntelliJ. The output on the console should look like the following:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177022947-4d14b5ad-ed9e-446e-afc9-7aacf5e95c71.png)
+
+<br>
+
+To test your application, open the http://localhost:8081 page on the browser. You will get (if all goes well) the following result:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177022984-53351639-aa17-4b94-b6a5-39ca5e95dcb0.png)
+
+<br>
+
+You will notice that the REST service created automatically respects the HATEOAS standard, which offers in REST services, links to navigate dynamically between interfaces.
+
+If you navigate to the http://localhost:8081/products page, you will see the list of products, injected by the CLR, as follows:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177023008-e5b7d0c3-0fe5-4dc2-b930-f437d00ddec1.png)
+
+<br>
+
+To see information about a single product, you just need to know its ID: http://localhost:8081/products/1, for example.
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177023043-b81182e5-1c29-495b-bcbc-2649f2752ec0.png)
+
+<br>
+To add search-by-name functionality, for example, modify the ProductRepository interface, as follows:
+
+```
+package tn.enicarthage.overmicro.productservice;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+@RepositoryRestResource
+public interface ProductRepository extends JpaRepository<Product , Integer> {
+
+    @Query("select p from Product p where p.name like :name")
+    public Page<Product> productByName(@Param("name") String mc
+            , Pageable pageable);
+}
+
+```
+
+To test this search functionality, go to the link http://localhost:8080/products/search/productByName?name=Eraser 
+The result obtained will be the following:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177023227-8f9c88d5-b14b-493d-b14b-e44f68032e19.png)
+
+<br>
+
+The Actuator dependency that has been added to the project allows you to display information about your REST API without having to explicitly implement the functionality. For example, if you go to http://localhost:8081/metrics, you will be able to have several information about the microservice, such as the number of threads, the memory capacity, the class loaded in memory, etc. But first, add the following two lines to the src/main/resources/application.properties file to (1) display more detailed service status information and (2) disable default security constraints:
+
+
+
+
+
+
+
 
 
 
