@@ -27,4 +27,4 @@ So we will create the following microservices:
 
 The resulting architecture will look like this:
 <p align="center">
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/kwOoAxi"  ><a href="//imgur.com/a/kwOoAxi">1</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></p>
+<img href="https://imgur.com/WXY8Pdd"></p>
