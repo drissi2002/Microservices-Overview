@@ -11,7 +11,8 @@
 
 ## Microservice Architecture
 ### Presentation
-A Microservices architecture represents a way of designing applications as a set of independently deployable services. These services should preferably be organized around business skills, automatic deployment, intelligent endpoints and decentralized control of technology and data.
+A Microservices architecture represents a way of designing applications as a set of independently deployable services. <br>
+These services should preferably be organized around business skills, automatic deployment, intelligent endpoints and decentralized control of technology and data.
 
 ### Proposed Architecture
 - The objective of this work is to show how to create several independently deployable services that communicate with each other, using the facilities offered by Spring Cloud and Spring Boot. 
@@ -31,9 +32,58 @@ The resulting architecture will look like this:
 
 ## Creating Microservices
 ### Microservice ProductService
-We start by creating the main service: Product Service.
+We start by creating the main service: *Product Service*.
 <p align="center">
-<img src=https://i.imgur.com/9zhEM3t.png" title="source: imgur.com" /></p>
+<img src="https://i.imgur.com/9zhEM3t.png" title="source: imgur.com" /></p>
+
+Each microservice will be in the form of a Spring project. To quickly and easily create a Spring project with all necessary dependencies, Spring Boot provides Spring Initializr.<br>
+To do this, go to the [*start.spring.io*](https://start.spring.io/) site, and create a project with the following characteristics:
+
+- Maven project with Java and Spring Boot version 1.5.8
+- Group: tn.enicarthage.overmicro
+- Artifact: product service
+- Dependencies:
+<p align="center">
+<img src="https://i.imgur.com/7t6mcya.png" title="source: imgur.com" /></p>
+
+Then follow these steps to create the ProductService microservice:
+
+1) Open the downloaded project with IntelliJ IDEA.
+2) Under the src/main/java directory and in the tn.enicarthage.overmicro.productservice package, create the following Product class:
+
+``
+package tn.insat.tpmicro.productservice;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+@Entity
+public class Product implements Serializable {
+    @Id
+    @GeneratedValue
+    private int id;
+    private String name;
+    public Product(){
+    }
+    public Product(String name) {
+        this.name = name;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+``
 
 
 
