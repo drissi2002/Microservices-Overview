@@ -211,11 +211,135 @@ Les informations sur l'état du service sont affichées grâce à http://localho
 
 <br>
 
+### Multiple Instances of the Microservice ProductService
+We will now create other instances of the same service and deploy them to different ports.
+
+<p align="center">
+<img src="https://i.imgur.com/1Bpk5ly.png" title="source: imgur.com" /></p>
+
+To launch multiple instances of the ProductService service, we will define multiple configurations with different port numbers. 
+For it:
+- Go to Run->Edit Configurations, and copy the ProductServiceApplication configuration to it selecting in the sidebar, and clicking on the icon <img alt="copy" src="https://i.imgur.com/E6GrFMa.png"> . A new configuration will be created.
+- Change its name: ProductServiceApplication:8082
+- Add in the Program Arguments box the following argument:
+```
+--server.port=8082
+```
+
+- Start setup. A new service will be available at: http://localhost:8082
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177055862-ba5d034c-26e7-4cdd-a223-ce5cfd98dacb.png)
+
+<br>
+- Repeat the same steps to create an instance of the service running on port 8083.
+### Microservice ConfigService
+
+In a microservices architecture, multiple services run at the same time, on different processes, each with its own configuration and settings. Spring Cloud Config provides server-side and client-side support for outsourcing configurations in a distributed system. Thanks to the configuration service, it is possible to have a centralized place to manage the properties of each of these services. 
+
+<p align="center">
+<img src="https://i.imgur.com/V3S5aii.png" title="source: imgur.com" /></p>
+
+So:
+
+- Start by creating a ConfigService service in Spring Initializr, with the appropriate dependencies, as shown in the following figure:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177057986-2c76084a-4682-464a-a4fa-06ebdb44e8d5.png)
+
+<br>
+
+- Open the project in another instance of IntelliJ IDEA.
+- To expose a configuration service, use the @EnableConfigServer annotation for the ConfigServiceApplication class, as follows:
+```
+package tn.enicarthage.overmicro.configservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.config.server.EnableConfigServer;
+
+@EnableConfigServer
+@SpringBootApplication
+public class ConfigServiceApplication {
+
+    public static void main(String[] args) {
+
+        SpringApplication.run(ConfigServiceApplication.class, args);
+    }
+}
+```
+- To configure this configuration service, add the following values to its application.properties file:
+```
+server.port=8888
+spring.cloud.config.server.git.uri=file:./src/main/resources/myConfig
+```
+Ceci indique que le service de configuration sera lancé sur le port 8888 et que le répertoire contenant les fichiers de configuration se trouve dans le répertoire src/main/resources/myConfig. Il suffit maintenant de créer ce répertoire.
+
+- Create myConfig directory at src/main/resources tree
+- Create in this directory the application.properties file in which you insert the following instruction:
+```
+global=xxxxx
+```
+This file will be shared between all microservices using this configuration service.
+
+- The configuration directory must be a git directory. For it:
+1) Open the terminal with IntelliJ and navigate to this directory.
+2) Initialize your directory: ```git init```
+3) Create a root entry in the repository: ```git add .```
+4) Make a commit: ```git commit -m "add ." ```
+
+5) Go back to the ProductService project and add in the application.properties configuration file:
+```
+spring.application.name = product-service
+spring.cloud.config.uri = http://localhost:8888
+```
+6) Restart your services. To view the configuration service, go to http://localhost:8888/product-service/master.
+
+You will see the following JSON file:
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177059138-afd10a6c-b039-41e4-a063-e3abd44d30d7.png)
+
+<br>
+
+As the application.properties file contains all the shared properties of the different microservices, we will need other files for the microservice-specific properties. For it:
+
+- Create in the myConfig directory a product-service.properties file for the ProductService service.
+- Add your service properties, i.e. for example:
+```
+me=drissi.houcemeddine@enicarthage.rnu.tn
+```
+
+- Restart the configuration microservice. Looking at the url http://localhost:8888/product-service/master, we notice the addition of the new property.
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177059342-60045356-2a4f-4bda-aec4-b0970d2233e7.png)
+
+<br>
+
+We will now define a REST call to this property. For it:
+- Create the ProductRestService class in the product-service project. Its code will look like the following:
+```
+package tn.enicarthage.overmicro.productservice;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ProductRestService {
+
+    @Value("${me}")
+    private String me;
 
 
-
-
-
+    @RequestMapping("/messages")
+    public String tellMe(){
+        System.out.println("c'est moi qui a répondu !");
+        return me;
+    }
+}
+```
 
 
 
