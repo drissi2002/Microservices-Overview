@@ -197,6 +197,21 @@ The result obtained will be the following:
 
 The Actuator dependency that has been added to the project allows you to display information about your REST API without having to explicitly implement the functionality. For example, if you go to http://localhost:8081/metrics, you will be able to have several information about the microservice, such as the number of threads, the memory capacity, the class loaded in memory, etc. But first, add the following two lines to the src/main/resources/application.properties file to (1) display more detailed service status information and (2) disable default security constraints:
 
+```
+ endpoints.health.sensitive = false
+ management.security.enabled = false
+```
+
+
+Les informations sur l'état du service sont affichées grâce à http://localhost:8081/actuator/health : 
+
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/177023622-45968fad-9eec-42fb-b09b-69f875da1dcd.png)
+
+<br>
+
+
 
 
 
