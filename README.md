@@ -290,8 +290,19 @@ This file will be shared between all microservices using this configuration serv
 
 5) Go back to the ProductService project and add in the application.properties configuration file:
 ```
-spring.application.name = product-service
-spring.cloud.config.uri = http://localhost:8888
+server:
+  port: 8081
+spring:
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: configserver:http://localhost:8888
+endpoints.health.sensitive: false
+management.security.enabled: false
+
+spring.application.name: product-service
+
 ```
 6) Restart your services. To view the configuration service, go to http://localhost:8888/product-service/master.
 
@@ -340,6 +351,20 @@ public class ProductRestService {
     }
 }
 ```
+- Restart the three instances of the service, then call the service in your browser by typing: http://localhost:8080/messages. You will see the following result on the browser:
+
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/180667928-3982b454-0bb0-4e2e-8241-bff74c597ce8.png)
+
+<br>
+
+### MicroserviceDiscoveryService
+To avoid a strong coupling between microservices, it is strongly recommended to use a discovery service which makes it possible to save the properties of the different services and thus avoid having to call a service directly. Instead, the discovery service will dynamically provide the necessary information, providing the elasticity and dynamicity inherent in a microservices architecture.
+
+<br>
+
+
 
 
 
