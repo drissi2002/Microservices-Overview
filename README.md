@@ -268,7 +268,7 @@ public class ConfigServiceApplication {
     }
 }
 ```
-- To configure this configuration service, add the following values to its application.properties file:
+- To configure this configuration service, add the following values to its application.yml file:
 ```
 server.port=8888
 spring.cloud.config.server.git.uri=file:./src/main/resources/myConfig
@@ -276,7 +276,7 @@ spring.cloud.config.server.git.uri=file:./src/main/resources/myConfig
 Ceci indique que le service de configuration sera lancé sur le port 8888 et que le répertoire contenant les fichiers de configuration se trouve dans le répertoire src/main/resources/myConfig. Il suffit maintenant de créer ce répertoire.
 
 - Create myConfig directory at src/main/resources tree
-- Create in this directory the application.properties file in which you insert the following instruction:
+- Create in this directory the application.yml file in which you insert the following instruction:
 ```
 global=xxxxx
 ```
@@ -288,7 +288,7 @@ This file will be shared between all microservices using this configuration serv
 3) Create a root entry in the repository: ```git add .```
 4) Make a commit: ```git commit -m "add ." ```
 
-5) Go back to the ProductService project and add in the application.properties configuration file:
+5) Go back to the ProductService project and add in the application.yml configuration file:
 ```
 server:
   port: 8081
@@ -357,12 +357,63 @@ public class ProductRestService {
 
 ![image](https://user-images.githubusercontent.com/84160502/180667928-3982b454-0bb0-4e2e-8241-bff74c597ce8.png)
 
-<br>
-
 ### MicroserviceDiscoveryService
 To avoid a strong coupling between microservices, it is strongly recommended to use a discovery service which makes it possible to save the properties of the different services and thus avoid having to call a service directly. Instead, the discovery service will dynamically provide the necessary information, providing the elasticity and dynamicity inherent in a microservices architecture.
 
 <br>
+<p align="center">
+<img src="https://i.imgur.com/N2CRiOi.png" title="source: imgur.com" /></p>
+
+To achieve this, Netflix offers the Eureka Service Registration and Discovery service, which we will use in our application.
+
+- Go back to Spring Initializr and create a new Spring Boot project named **discovery-service with Eureka Server** and Config Client dependencies.
+- Launch the project with IntelliJ.
+- In the DiscoveryServiceApplication class, add the **@EnableEurekaServer** annotation.
+
+```
+package tn.enicarthage.overmicro.discoveryservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@EnableEurekaServer
+@SpringBootApplication
+public class DiscoveryServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DiscoveryServiceApplication.class, args);
+    }
+}
+```
+- Add the following properties in its application.yml file.
+
+```
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-service
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: configserver:http://localhost:8888
+
+```
+
+- In the config-service project, create a discovery-service.yml file under the myConfig directory.
+- Add the following properties to (1) set the default discovery service port and (2) prevent the Eureka service from self-registering.
+
+```
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+```
+
+
 
 
 
