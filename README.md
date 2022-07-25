@@ -351,7 +351,7 @@ public class ProductRestService {
     }
 }
 ```
-- Restart the three instances of the service, then call the service in your browser by typing: http://localhost:8080/messages. You will see the following result on the browser:
+- Restart the three instances of the service, then call the service in your browser by typing: http://localhost:8081/messages. You will see the following result on the browser:
 
 <br>
 
