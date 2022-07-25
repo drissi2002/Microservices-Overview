@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+spring.application.name: product-service
+spring.main.allow-circular-references: true
+spring:
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: configserver:http://localhost:8888
+
+#endpoints.health.sensitive: false
+#management.security.enabled: false
+
+
+
+
+

@@ -1,0 +1,12 @@
+server:
+  port: 9999
+
+spring:
+  main:
+    allow-circular-references: true
+
+zuul:
+  routes:
+    users:
+      path: /messages/**
+      serviceId: product-service
