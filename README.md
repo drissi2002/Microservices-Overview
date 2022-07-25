@@ -412,6 +412,61 @@ eureka:
     fetch-registry: false
     register-with-eureka: false
 ```
+- To consult the Eureka service, go to http://localhost:8761, the following interface is displayed: 
+- We notice that no instance is registered in the discovery server. So we will modify the code of the ProductServiceApplication class for the ProductService microservice to register:
+
+```
+package tn.enicarthage.overmicro.productservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@EnableDiscoveryClient
+@SpringBootApplication
+public class ProductServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
+}
+
+```
+
+- Restart the three instances of ProductService services and refresh the Eureka window, you will see that only one service is declared, with three different addresses.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/180877733-364ee52f-8ea1-437b-a6e8-99a12006fba1.png)
+
+<br>
+
+### Microservice ProxyService
+
+The microservices architecture, by providing a set of independent, loosely coupled services, faces the challenge of providing a unified interface for consumers so that they don't see the fine-grained decomposition of your services. This is why the use of a proxy service, responsible for request routing and load balancing, is important.
+
+<p align="center">
+<img src="https://i.imgur.com/fV1rPrG.png" title="source: imgur.com" /></p>
+
+Netflix offers the **Zuul service** to achieve this. To create your Proxy microservice:
+
+- Go to Spring Initializr.
+- Create the proxy-service project with the following dependencies: Zuul, Web, HATEOAS, Actuator, Config Client and Eureka Discovery.
+- Open the service with IntelliJ IDEA.
+- Add to the ProxyServiceApplication class the annotation **@EnableZuulProxy**, as well as **@EnableDiscoveryClient** so that the proxy is also registered in the discovery service.
+- Add spring.application.name and spring.cloud.config.uri properties in the proxy service application.properties file.
+- Create the proxy-service.properties file in the myConfig directory of the configuration service, in which you will set the proxy service port to 9999.
+
+By launching the Proxy service, you will notice that it is added in Eureka.
+<br>
+
+![image](https://user-images.githubusercontent.com/84160502/180882864-e7f833bb-3846-41e3-825b-91d2df8a3af4.png)
+
+<br>
+
+- If you use the request http://localhost:9999/product-service/messages multiple times, you'll notice that the display shows me answering! will appear on the consoles of the three instances respectively, in turn.
+
+
 
 
 
