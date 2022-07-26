@@ -467,6 +467,11 @@ By launching the Proxy service, you will notice that it is added in Eureka.
 - If you use the request http://localhost:9999/product-service/messages multiple times, you'll notice that the display shows me answering! will appear on the consoles of the three instances respectively, in turn.
 
 
+## Finale Overview 
+
+<p align="center">
+<img src="https://i.imgur.com/Tdpb6Mw.png" title="source: imgur.com" /></p>
+
 
 
 
